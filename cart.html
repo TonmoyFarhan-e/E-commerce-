@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>কার্ট — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="খুঁজুন...">
+        <button type="submit" aria-label="খুঁজুন">🔍</button>
+      </form>
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">হোম</a> / কার্ট</div>
+  <div class="section" style="padding-top:20px;">
+    <h1>আপনার কার্ট</h1>
+    <div id="cartArea"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4 style="font-family:var(--font-display); font-size:1.3rem; color:#fff;">লোকশিল্প</h4>
+      <p>বাংলার তাঁতি, কুমার, কাঁসারি আর বেতশিল্পীদের হাতে তৈরি পণ্য, সরাসরি আপনার ঘরে।</p>
+    </div>
+    <div>
+      <h4>ক্যাটাগরি</h4>
+      <ul>
+        <li><a href="shop.html?cat=saree">শাড়ি</a></li>
+        <li><a href="shop.html?cat=clay">মৃৎশিল্প</a></li>
+        <li><a href="shop.html?cat=brass">কাঁসা-পিতল</a></li>
+        <li><a href="shop.html?cat=bamboo">বাঁশ-বেত</a></li>
+        <li><a href="shop.html?cat=stitch">হাতের সেলাই পোশাক</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>সহায়তা</h4>
+      <ul>
+        <li><a href="about.html">আমাদের কথা</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+        <li><a href="cart.html">কার্ট দেখুন</a></li>
+        <li><a href="checkout.html">চেকআউট</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>যোগাযোগ</h4>
+      <p>ইমেইল: hello@lokoshilpo.com<br>ফোন: ০১৭XXXXXXXX<br>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+function render(){
+  const lines = cartLines();
+  const area = document.getElementById("cartArea");
+
+  if(lines.length === 0){
+    area.innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🛒</div>
+        <h3>আপনার কার্ট খালি</h3>
+        <p>এখনো কোনো পণ্য যোগ করা হয়নি।</p>
+        <a href="shop.html" class="btn btn-primary">শপিং শুরু করুন</a>
+      </div>`;
+    return;
+  }
+
+  const rows = lines.map(l => `
+    <tr>
+      <td>
+        <div class="cart-item-info">
+          <div class="cart-thumb ${l.product.thumbClass}"></div>
+          <div>
+            <div class="cart-item-name">${l.product.name}</div>
+            <div class="cart-item-cat">${l.product.catLabel}</div>
+            <a href="#" class="remove-link" data-id="${l.product.id}">সরিয়ে দিন</a>
+          </div>
+        </div>
+      </td>
+      <td>${formatBDT(l.product.price)}</td>
+      <td>
+        <div class="qty-box">
+          <button type="button" class="qm" data-id="${l.product.id}">−</button>
+          <input type="text" readonly value="${l.qty}">
+          <button type="button" class="qp" data-id="${l.product.id}" data-max="${l.product.stock}">+</button>
+        </div>
+      </td>
+      <td><strong>${formatBDT(l.lineTotal)}</strong></td>
+    </tr>
+  `).join("");
+
+  const subtotal = cartSubtotal();
+
+  area.innerHTML = `
+    <table class="cart-table">
+      <thead><tr><th>পণ্য</th><th>মূল্য</th><th>পরিমাণ</th><th>মোট</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin: 24px 0; flex-wrap:wrap; gap:14px;">
+      <a href="shop.html" class="btn btn-outline">← শপিং চালিয়ে যান</a>
+    </div>
+    <div class="cart-summary">
+      <div class="summary-row"><span>সাবটোটাল</span><span>${formatBDT(subtotal)}</span></div>
+      <div class="summary-row"><span>ডেলিভারি চার্জ</span><span>${formatBDT(SHIPPING_FLAT)}</span></div>
+      <div class="summary-row total"><span>সর্বমোট</span><span>${formatBDT(subtotal + SHIPPING_FLAT)}</span></div>
+      <a href="checkout.html" class="btn btn-primary btn-block" style="margin-top:16px;">চেকআউটে যান</a>
+    </div>
+  `;
+
+  area.querySelectorAll(".remove-link").forEach(el => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      removeFromCart(el.dataset.id);
+      showToast("পণ্যটি কার্ট থেকে সরানো হয়েছে");
+      render();
+    });
+  });
+  area.querySelectorAll(".qm").forEach(el => {
+    el.addEventListener("click", () => {
+      const cur = getCart().find(i => i.id === el.dataset.id);
+      setQty(el.dataset.id, (cur ? cur.qty : 1) - 1);
+      render();
+    });
+  });
+  area.querySelectorAll(".qp").forEach(el => {
+    el.addEventListener("click", () => {
+      const cur = getCart().find(i => i.id === el.dataset.id);
+      const max = Number(el.dataset.max);
+      setQty(el.dataset.id, Math.min(max, (cur ? cur.qty : 1) + 1));
+      render();
+    });
+  });
+}
+
+render();
+</script>
+</body>
+</html>

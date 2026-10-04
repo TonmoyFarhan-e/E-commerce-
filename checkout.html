@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>চেকআউট — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="খুঁজুন...">
+        <button type="submit" aria-label="খুঁজুন">🔍</button>
+      </form>
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">হোম</a> / <a href="cart.html">কার্ট</a> / চেকআউট</div>
+  <div class="section" style="padding-top:20px;" id="checkoutSection">
+    <h1>চেকআউট</h1>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4 style="font-family:var(--font-display); font-size:1.3rem; color:#fff;">লোকশিল্প</h4>
+      <p>বাংলার তাঁতি, কুমার, কাঁসারি আর বেতশিল্পীদের হাতে তৈরি পণ্য, সরাসরি আপনার ঘরে।</p>
+    </div>
+    <div>
+      <h4>সহায়তা</h4>
+      <ul>
+        <li><a href="about.html">আমাদের কথা</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>যোগাযোগ</h4>
+      <p>ইমেইল: hello@lokoshilpo.com<br>ফোন: ০১৭XXXXXXXX</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+const section = document.getElementById("checkoutSection");
+const lines = cartLines();
+
+if(lines.length === 0){
+  section.innerHTML += `
+    <div class="empty-state">
+      <div class="icon">🛒</div>
+      <h3>কার্ট খালি থাকায় চেকআউট করা যাচ্ছে না</h3>
+      <p>চেকআউট করতে আগে শপ থেকে পণ্য যোগ করুন।</p>
+      <a href="shop.html" class="btn btn-primary">শপে যান</a>
+    </div>`;
+} else {
+  const subtotal = cartSubtotal();
+  const grandTotal = subtotal + SHIPPING_FLAT;
+
+  const itemRows = lines.map(l => `
+    <div class="summary-row"><span>${l.product.name} × ${l.qty}</span><span>${formatBDT(l.lineTotal)}</span></div>
+  `).join("");
+
+  section.innerHTML += `
+    <div class="checkout-layout">
+      <form id="checkoutForm" novalidate>
+        <h3>ডেলিভারি ঠিকানা</h3>
+        <div class="form-grid">
+          <div class="form-field full" data-req>
+            <label for="fullName">পূর্ণ নাম *</label>
+            <input type="text" id="fullName" required>
+            <div class="error">নাম দিন</div>
+          </div>
+          <div class="form-field" data-req>
+            <label for="phone">মোবাইল নম্বর *</label>
+            <input type="tel" id="phone" placeholder="01XXXXXXXXX" required>
+            <div class="error">সঠিক মোবাইল নম্বর দিন</div>
+          </div>
+          <div class="form-field">
+            <label for="email">ইমেইল (ঐচ্ছিক)</label>
+            <input type="email" id="email">
+          </div>
+          <div class="form-field full" data-req>
+            <label for="address">সম্পূর্ণ ঠিকানা *</label>
+            <textarea id="address" rows="3" required></textarea>
+            <div class="error">ঠিকানা দিন</div>
+          </div>
+          <div class="form-field" data-req>
+            <label for="city">জেলা / শহর *</label>
+            <input type="text" id="city" required>
+            <div class="error">জেলা/শহর দিন</div>
+          </div>
+          <div class="form-field">
+            <label for="note">অর্ডার নোট (ঐচ্ছিক)</label>
+            <input type="text" id="note" placeholder="বিশেষ কোনো নির্দেশনা থাকলে লিখুন">
+          </div>
+        </div>
+
+        <h3>পেমেন্ট পদ্ধতি</h3>
+        <div class="pay-options">
+          <label class="pay-option">
+            <input type="radio" name="pay" value="cod" checked>
+            <span><strong>ক্যাশ অন ডেলিভারি</strong> — পণ্য হাতে পেয়ে মূল্য পরিশোধ করুন</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" value="bkash">
+            <span><strong>bKash</strong> — Send Money করুন 01XXXXXXXXX নম্বরে, ট্রানজেকশন আইডি দিন</span>
+          </label>
+          <label class="pay-option">
+            <input type="radio" name="pay" value="nagad">
+            <span><strong>Nagad</strong> — Send Money করুন 01XXXXXXXXX নম্বরে, ট্রানজেকশন আইডি দিন</span>
+          </label>
+        </div>
+        <div class="form-field" id="txnField" style="display:none; margin-top:12px;">
+          <label for="txnId">ট্রানজেকশন আইডি *</label>
+          <input type="text" id="txnId">
+          <div class="error">ট্রানজেকশন আইডি দিন</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:18px;">অর্ডার নিশ্চিত করুন</button>
+      </form>
+
+      <div class="cart-summary" style="margin-left:0;">
+        <h3 style="margin-top:0;">অর্ডার সামারি</h3>
+        ${itemRows}
+        <div class="summary-row"><span>সাবটোটাল</span><span>${formatBDT(subtotal)}</span></div>
+        <div class="summary-row"><span>ডেলিভারি চার্জ</span><span>${formatBDT(SHIPPING_FLAT)}</span></div>
+        <div class="summary-row total"><span>সর্বমোট</span><span>${formatBDT(grandTotal)}</span></div>
+      </div>
+    </div>
+  `;
+
+  const payRadios = document.querySelectorAll('input[name="pay"]');
+  const txnField = document.getElementById("txnField");
+  payRadios.forEach(r => r.addEventListener("change", () => {
+    txnField.style.display = r.value !== "cod" && r.checked ? "block" : (document.querySelector('input[name="pay"]:checked').value !== "cod" ? "block" : "none");
+  }));
+
+  document.getElementById("checkoutForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    document.querySelectorAll(".form-field[data-req]").forEach(field => {
+      const input = field.querySelector("input, textarea");
+      if(!input.value.trim()){
+        field.classList.add("invalid");
+        valid = false;
+      }else{
+        field.classList.remove("invalid");
+      }
+    });
+
+    const payMethod = document.querySelector('input[name="pay"]:checked').value;
+    if(payMethod !== "cod"){
+      const txnInput = document.getElementById("txnId");
+      if(!txnInput.value.trim()){
+        txnField.classList.add("invalid");
+        valid = false;
+      }else{
+        txnField.classList.remove("invalid");
+      }
+    }
+
+    if(!valid) return;
+
+    const orderId = "LS" + Date.now().toString().slice(-8);
+    const order = {
+      id: orderId,
+      date: new Date().toISOString(),
+      name: document.getElementById("fullName").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      address: document.getElementById("address").value.trim(),
+      city: document.getElementById("city").value.trim(),
+      pay: payMethod,
+      items: lines.map(l => ({ id: l.product.id, name: l.product.name, qty: l.qty, price: l.product.price })),
+      subtotal, shipping: SHIPPING_FLAT, total: grandTotal
+    };
+
+    const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+    orders.push(order);
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    localStorage.setItem(CART_KEY, "[]");
+
+    window.location.href = "order-success.html?id=" + orderId;
+  });
+}
+</script>
+</body>
+</html>

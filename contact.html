@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>যোগাযোগ — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="খুঁজুন...">
+        <button type="submit" aria-label="খুঁজুন">🔍</button>
+      </form>
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-banner">
+  <div class="container"><h1>যোগাযোগ করুন</h1></div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">হোম</a> / যোগাযোগ</div>
+
+  <div class="section checkout-layout">
+    <div>
+      <h2>বার্তা পাঠান</h2>
+      <p>অর্ডার, পণ্য, বা কারিগর হিসেবে যুক্ত হওয়া নিয়ে কোনো প্রশ্ন থাকলে নিচের ফর্মটি পূরণ করুন — আমরা যত দ্রুত সম্ভব সাড়া দেব।</p>
+      <form id="contactForm" novalidate>
+        <div class="form-grid">
+          <div class="form-field full" data-req>
+            <label for="cName">নাম *</label>
+            <input type="text" id="cName" required>
+            <div class="error">নাম দিন</div>
+          </div>
+          <div class="form-field" data-req>
+            <label for="cEmail">ইমেইল *</label>
+            <input type="email" id="cEmail" required>
+            <div class="error">সঠিক ইমেইল দিন</div>
+          </div>
+          <div class="form-field">
+            <label for="cPhone">মোবাইল নম্বর (ঐচ্ছিক)</label>
+            <input type="tel" id="cPhone">
+          </div>
+          <div class="form-field full" data-req>
+            <label for="cMessage">বার্তা *</label>
+            <textarea id="cMessage" rows="5" required></textarea>
+            <div class="error">বার্তা লিখুন</div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">বার্তা পাঠান</button>
+      </form>
+      <div id="contactSuccess" style="display:none; margin-top:16px; padding:14px 16px; background:var(--cream-card); border:1px solid var(--line); border-radius:var(--radius-m);">
+        ধন্যবাদ! আপনার বার্তা পাওয়া গেছে। আমরা শীঘ্রই যোগাযোগ করব।
+      </div>
+    </div>
+
+    <div class="cart-summary" style="margin-left:0;">
+      <h3 style="margin-top:0;">যোগাযোগের তথ্য</h3>
+      <p><strong>ইমেইল</strong><br>hello@lokoshilpo.com</p>
+      <p><strong>ফোন</strong><br>০১৭XXXXXXXX (সকাল ১০টা – রাত ৮টা)</p>
+      <p><strong>ঠিকানা</strong><br>ঢাকা, বাংলাদেশ</p>
+      <p style="margin-bottom:0;"><strong>ডেলিভারি</strong><br>সারাদেশে ক্যাশ অন ডেলিভারি ও bKash/Nagad সুবিধা</p>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4 style="font-family:var(--font-display); font-size:1.3rem; color:#fff;">লোকশিল্প</h4>
+      <p>বাংলার তাঁতি, কুমার, কাঁসারি আর বেতশিল্পীদের হাতে তৈরি পণ্য, সরাসরি আপনার ঘরে।</p>
+    </div>
+    <div>
+      <h4>ক্যাটাগরি</h4>
+      <ul>
+        <li><a href="shop.html?cat=saree">শাড়ি</a></li>
+        <li><a href="shop.html?cat=clay">মৃৎশিল্প</a></li>
+        <li><a href="shop.html?cat=brass">কাঁসা-পিতল</a></li>
+        <li><a href="shop.html?cat=bamboo">বাঁশ-বেত</a></li>
+        <li><a href="shop.html?cat=stitch">হাতের সেলাই পোশাক</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>সহায়তা</h4>
+      <ul>
+        <li><a href="about.html">আমাদের কথা</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+        <li><a href="cart.html">কার্ট দেখুন</a></li>
+        <li><a href="checkout.html">চেকআউট</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>যোগাযোগ</h4>
+      <p>ইমেইল: hello@lokoshilpo.com<br>ফোন: ০১৭XXXXXXXX<br>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+document.getElementById("contactForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  let valid = true;
+  document.querySelectorAll("#contactForm .form-field[data-req]").forEach(field => {
+    const input = field.querySelector("input, textarea");
+    if(!input.value.trim()){
+      field.classList.add("invalid");
+      valid = false;
+    }else{
+      field.classList.remove("invalid");
+    }
+  });
+  if(!valid) return;
+  document.getElementById("contactForm").reset();
+  document.getElementById("contactSuccess").style.display = "block";
+});
+</script>
+</body>
+</html>

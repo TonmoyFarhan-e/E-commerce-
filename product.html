@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">পণ্য — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="খুঁজুন...">
+        <button type="submit" aria-label="খুঁজুন">🔍</button>
+      </form>
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="breadcrumb" id="crumbs"><a href="index.html">হোম</a> / <a href="shop.html">শপ</a> / ...</div>
+
+  <div id="productArea"></div>
+
+  <section class="section" style="padding-top:0;">
+    <div class="section-head">
+      <h2>আপনার পছন্দ হতে পারে</h2>
+    </div>
+    <div class="product-grid" id="relatedGrid"></div>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4 style="font-family:var(--font-display); font-size:1.3rem; color:#fff;">লোকশিল্প</h4>
+      <p>বাংলার তাঁতি, কুমার, কাঁসারি আর বেতশিল্পীদের হাতে তৈরি পণ্য, সরাসরি আপনার ঘরে।</p>
+    </div>
+    <div>
+      <h4>ক্যাটাগরি</h4>
+      <ul>
+        <li><a href="shop.html?cat=saree">শাড়ি</a></li>
+        <li><a href="shop.html?cat=clay">মৃৎশিল্প</a></li>
+        <li><a href="shop.html?cat=brass">কাঁসা-পিতল</a></li>
+        <li><a href="shop.html?cat=bamboo">বাঁশ-বেত</a></li>
+        <li><a href="shop.html?cat=stitch">হাতের সেলাই পোশাক</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>সহায়তা</h4>
+      <ul>
+        <li><a href="about.html">আমাদের কথা</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+        <li><a href="cart.html">কার্ট দেখুন</a></li>
+        <li><a href="checkout.html">চেকআউট</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>যোগাযোগ</h4>
+      <p>ইমেইল: hello@lokoshilpo.com<br>ফোন: ০১৭XXXXXXXX<br>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+const id = new URLSearchParams(window.location.search).get("id");
+const product = getProductById(id);
+
+function productCardHTML(p){
+  return `
+    <div class="product-card">
+      <a href="product.html?id=${p.id}" class="product-thumb ${p.thumbClass}">
+        ${p.tag ? `<span class="badge">${p.tag}</span>` : ""}
+        <span>${p.name}</span>
+      </a>
+      <div class="product-body">
+        <div class="product-cat">${p.catLabel}</div>
+        <a href="product.html?id=${p.id}" class="product-name">${p.name}</a>
+        <div class="product-price">
+          <span class="now">${formatBDT(p.price)}</span>
+          ${p.oldPrice ? `<span class="was">${formatBDT(p.oldPrice)}</span>` : ""}
+        </div>
+        <div class="product-actions">
+          <a href="product.html?id=${p.id}" class="btn btn-outline">দেখুন</a>
+          <button class="btn btn-primary" onclick="addToCart('${p.id}',1); showToast('কার্টে যোগ হয়েছে')">কার্টে যোগ করুন</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+if(!product){
+  document.getElementById("productArea").innerHTML = `
+    <div class="empty-state">
+      <div class="icon">😕</div>
+      <h3>পণ্যটি খুঁজে পাওয়া যায়নি</h3>
+      <p>এই পণ্যটি হয়তো সরিয়ে ফেলা হয়েছে বা লিংকটি সঠিক নয়।</p>
+      <a href="shop.html" class="btn btn-primary">শপে ফিরে যান</a>
+    </div>`;
+}else{
+  document.title = product.name + " — লোকশিল্প";
+  document.getElementById("crumbs").innerHTML =
+    `<a href="index.html">হোম</a> / <a href="shop.html">শপ</a> / <a href="shop.html?cat=${product.category}">${product.catLabel}</a> / ${product.name}`;
+
+  const stockLabel = product.stock > 5
+    ? `<span class="pd-stock in">✔ স্টকে আছে</span>`
+    : product.stock > 0
+      ? `<span class="pd-stock low">মাত্র ${product.stock}টি বাকি আছে</span>`
+      : `<span class="pd-stock" style="color:#8C2F2F;">স্টক শেষ</span>`;
+
+  const metaHTML = Object.entries(product.meta).map(([k,v]) => `<li><span>${k}</span><span>${v}</span></li>`).join("");
+
+  document.getElementById("productArea").innerHTML = `
+    <div class="pd-layout">
+      <div>
+        <div class="pd-gallery-main ${product.thumbClass}">
+          <span>${product.name}</span>
+        </div>
+      </div>
+      <div>
+        <div class="pd-cat">${product.catLabel}</div>
+        <h1 style="margin-bottom:.2em;">${product.name}</h1>
+        <div class="pd-price">
+          <span class="now">${formatBDT(product.price)}</span>
+          ${product.oldPrice ? `<span class="was">${formatBDT(product.oldPrice)}</span>` : ""}
+        </div>
+        ${stockLabel}
+        <p class="pd-desc">${product.desc}</p>
+        <ul class="pd-meta-list">${metaHTML}</ul>
+
+        <div class="qty-row">
+          <div class="qty-box">
+            <button type="button" id="qtyMinus">−</button>
+            <input type="text" id="qtyInput" value="1" readonly>
+            <button type="button" id="qtyPlus">+</button>
+          </div>
+          <span style="color:#6b5f52; font-size:.9rem;">সর্বোচ্চ ${product.stock}টি</span>
+        </div>
+
+        <div class="pd-cta">
+          <button class="btn btn-primary" id="addBtn" ${product.stock === 0 ? "disabled" : ""}>কার্টে যোগ করুন</button>
+          <a href="cart.html" class="btn btn-outline" id="buyNowBtn">কার্ট দেখুন</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  let qty = 1;
+  const qtyInput = document.getElementById("qtyInput");
+  document.getElementById("qtyMinus").addEventListener("click", () => {
+    qty = Math.max(1, qty - 1);
+    qtyInput.value = qty;
+  });
+  document.getElementById("qtyPlus").addEventListener("click", () => {
+    qty = Math.min(product.stock, qty + 1);
+    qtyInput.value = qty;
+  });
+  document.getElementById("addBtn").addEventListener("click", () => {
+    addToCart(product.id, qty);
+    showToast(`"${product.name}" কার্টে যোগ হয়েছে`);
+  });
+
+  const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0,4);
+  document.getElementById("relatedGrid").innerHTML = related.map(productCardHTML).join("");
+}
+</script>
+</body>
+</html>

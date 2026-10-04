@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>অর্ডার সফল হয়েছে — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="success-box" id="successBox"></div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+const orderId = new URLSearchParams(window.location.search).get("id");
+const orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+const order = orders.find(o => o.id === orderId);
+const box = document.getElementById("successBox");
+
+if(!order){
+  box.innerHTML = `
+    <h2>অর্ডারের তথ্য পাওয়া যায়নি</h2>
+    <p>এই অর্ডারটি খুঁজে পাওয়া যায়নি। হয়তো ব্রাউজার ডেটা মুছে ফেলা হয়েছে।</p>
+    <a href="shop.html" class="btn btn-primary">শপে ফিরে যান</a>
+  `;
+}else{
+  const payLabel = { cod: "ক্যাশ অন ডেলিভারি", bkash: "bKash", nagad: "Nagad" }[order.pay] || order.pay;
+  box.innerHTML = `
+    <div class="success-icon">✓</div>
+    <h2>ধন্যবাদ, ${order.name}! আপনার অর্ডারটি নিশ্চিত হয়েছে</h2>
+    <p>আমরা শীঘ্রই আপনার সাথে ফোনে যোগাযোগ করে অর্ডারটি নিশ্চিত করব। প্রশ্ন থাকলে ফোন নম্বরে (${order.phone}) আমরা কল করব।</p>
+    <div class="order-id-box">অর্ডার নম্বর: ${order.id}</div>
+    <div class="cart-summary" style="margin: 0 auto; text-align:left;">
+      <div class="summary-row"><span>পেমেন্ট পদ্ধতি</span><span>${payLabel}</span></div>
+      <div class="summary-row"><span>ডেলিভারি ঠিকানা</span><span style="text-align:right; max-width:60%;">${order.address}, ${order.city}</span></div>
+      <div class="summary-row total"><span>সর্বমোট</span><span>${formatBDT(order.total)}</span></div>
+    </div>
+    <div class="hero-ctas" style="justify-content:center; margin-top:24px;">
+      <a href="shop.html" class="btn btn-primary">শপিং চালিয়ে যান</a>
+      <a href="index.html" class="btn btn-outline">হোমে ফিরে যান</a>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

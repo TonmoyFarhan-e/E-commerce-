@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সব পণ্য — লোকশিল্প</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <a href="index.html" class="brand">লোক<span>শিল্প</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">হোম</a>
+      <a href="shop.html">শপ</a>
+      <a href="about.html">আমাদের কথা</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" id="headerSearchForm">
+        <input type="text" id="headerSearchInput" placeholder="খুঁজুন...">
+        <button type="submit" aria-label="খুঁজুন">🔍</button>
+      </form>
+      <a href="cart.html" class="cart-link" aria-label="কার্ট">🛒<span class="cart-count">0</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="মেনু">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="page-banner">
+  <div class="container">
+    <h1>সব পণ্য</h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">হোম</a> / শপ</div>
+
+  <div class="section shop-layout">
+    <aside class="filters">
+      <h3>ক্যাটাগরি</h3>
+      <div class="filter-group" id="catFilters"></div>
+
+      <h3>মূল্য</h3>
+      <div class="filter-group" id="priceFilters">
+        <label><input type="radio" name="price" value="all" checked> সব মূল্য</label>
+        <label><input type="radio" name="price" value="0-800"> ৳০ – ৳৮০০</label>
+        <label><input type="radio" name="price" value="800-1500"> ৳৮০০ – ৳১৫০০</label>
+        <label><input type="radio" name="price" value="1500-3000"> ৳১৫০০ – ৳৩০০০</label>
+        <label><input type="radio" name="price" value="3000-99999"> ৳৩০০০+</label>
+      </div>
+
+      <button class="btn btn-outline btn-block" id="clearFilters">ফিল্টার মুছুন</button>
+    </aside>
+
+    <div>
+      <div class="shop-toolbar">
+        <div class="result-count" id="resultCount"></div>
+        <select id="sortSelect">
+          <option value="default">নতুন অনুযায়ী সাজান</option>
+          <option value="price-asc">মূল্য: কম থেকে বেশি</option>
+          <option value="price-desc">মূল্য: বেশি থেকে কম</option>
+          <option value="name-asc">নাম অনুযায়ী (A-Z)</option>
+        </select>
+      </div>
+      <div class="product-grid" id="shopGrid"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <h4 style="font-family:var(--font-display); font-size:1.3rem; color:#fff;">লোকশিল্প</h4>
+      <p>বাংলার তাঁতি, কুমার, কাঁসারি আর বেতশিল্পীদের হাতে তৈরি পণ্য, সরাসরি আপনার ঘরে।</p>
+    </div>
+    <div>
+      <h4>ক্যাটাগরি</h4>
+      <ul>
+        <li><a href="shop.html?cat=saree">শাড়ি</a></li>
+        <li><a href="shop.html?cat=clay">মৃৎশিল্প</a></li>
+        <li><a href="shop.html?cat=brass">কাঁসা-পিতল</a></li>
+        <li><a href="shop.html?cat=bamboo">বাঁশ-বেত</a></li>
+        <li><a href="shop.html?cat=stitch">হাতের সেলাই পোশাক</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>সহায়তা</h4>
+      <ul>
+        <li><a href="about.html">আমাদের কথা</a></li>
+        <li><a href="contact.html">যোগাযোগ</a></li>
+        <li><a href="cart.html">কার্ট দেখুন</a></li>
+        <li><a href="checkout.html">চেকআউট</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>যোগাযোগ</h4>
+      <p>ইমেইল: hello@lokoshilpo.com<br>ফোন: ০১৭XXXXXXXX<br>ঠিকানা: ঢাকা, বাংলাদেশ</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 লোকশিল্প (lokoshilpo.com) — সর্বস্বত্ব সংরক্ষিত।</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+let state = {
+  cats: params.get("cat") ? [params.get("cat")] : [],
+  price: "all",
+  sort: "default",
+  q: (params.get("q") || "").trim().toLowerCase()
+};
+
+function renderCatFilters(){
+  const el = document.getElementById("catFilters");
+  el.innerHTML = CATEGORIES.map(c => `
+    <label>
+      <input type="checkbox" value="${c.key}" ${state.cats.includes(c.key) ? "checked" : ""}>
+      ${c.icon} ${c.label}
+    </label>
+  `).join("");
+  el.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("change", () => {
+      const checked = Array.from(el.querySelectorAll("input:checked")).map(i => i.value);
+      state.cats = checked;
+      renderGrid();
+    });
+  });
+}
+
+function productCardHTML(p){
+  return `
+    <div class="product-card">
+      <a href="product.html?id=${p.id}" class="product-thumb ${p.thumbClass}">
+        ${p.tag ? `<span class="badge">${p.tag}</span>` : ""}
+        <span>${p.name}</span>
+      </a>
+      <div class="product-body">
+        <div class="product-cat">${p.catLabel}</div>
+        <a href="product.html?id=${p.id}" class="product-name">${p.name}</a>
+        <div class="product-price">
+          <span class="now">${formatBDT(p.price)}</span>
+          ${p.oldPrice ? `<span class="was">${formatBDT(p.oldPrice)}</span>` : ""}
+        </div>
+        <div class="product-actions">
+          <a href="product.html?id=${p.id}" class="btn btn-outline">দেখুন</a>
+          <button class="btn btn-primary" onclick="addToCart('${p.id}',1); showToast('কার্টে যোগ হয়েছে')">কার্টে যোগ করুন</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGrid(){
+  let list = PRODUCTS.slice();
+
+  if(state.cats.length){
+    list = list.filter(p => state.cats.includes(p.category));
+  }
+  if(state.q){
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(state.q) ||
+      p.short.toLowerCase().includes(state.q) ||
+      p.catLabel.toLowerCase().includes(state.q)
+    );
+  }
+  if(state.price !== "all"){
+    const [min, max] = state.price.split("-").map(Number);
+    list = list.filter(p => p.price >= min && p.price <= max);
+  }
+  if(state.sort === "price-asc") list.sort((a,b) => a.price - b.price);
+  if(state.sort === "price-desc") list.sort((a,b) => b.price - a.price);
+  if(state.sort === "name-asc") list.sort((a,b) => a.name.localeCompare(b.name, "bn"));
+
+  document.getElementById("resultCount").textContent = list.length + "টি পণ্য পাওয়া গেছে";
+
+  const grid = document.getElementById("shopGrid");
+  if(list.length === 0){
+    grid.style.display = "block";
+    grid.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><h3>কোনো পণ্য পাওয়া যায়নি</h3><p>অন্য ক্যাটাগরি বা কম শব্দে খুঁজে দেখুন।</p></div>`;
+  }else{
+    grid.style.display = "grid";
+    grid.innerHTML = list.map(productCardHTML).join("");
+  }
+}
+
+document.getElementById("priceFilters").addEventListener("change", (e) => {
+  state.price = e.target.value;
+  renderGrid();
+});
+document.getElementById("sortSelect").addEventListener("change", (e) => {
+  state.sort = e.target.value;
+  renderGrid();
+});
+document.getElementById("clearFilters").addEventListener("click", () => {
+  state = { cats: [], price: "all", sort: "default", q: "" };
+  document.querySelectorAll('input[name="price"]').forEach(r => r.checked = r.value === "all");
+  document.getElementById("sortSelect").value = "default";
+  renderCatFilters();
+  renderGrid();
+});
+
+if(state.q){
+  document.getElementById("headerSearchInput").value = params.get("q");
+}
+
+renderCatFilters();
+renderGrid();
+</script>
+</body>
+</html>
